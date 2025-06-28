@@ -20,7 +20,7 @@ func main() {
 	// Inicializar logger
 	logger := middleware.NewLogger()
 
-	// Conectar ao banco de dados (opcional)
+	// Conectar ao banco de dados
 	db, err := database.Connect(cfg.Database)
 	if err != nil {
 		logger.Fatalf("Failed to connect to database: %v", err)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"golang/internal/config"
+	"golang/internal/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,10 +20,7 @@ func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		// Retorna nil em vez de erro para permitir execução sem banco
-		fmt.Printf("Warning: Failed to connect to database: %v\n", err)
-		fmt.Println("Application will run without database connection")
-		return nil, nil
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	// Auto-migrate models
@@ -36,8 +34,7 @@ func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 // autoMigrate executa as migrações automáticas dos modelos
 func autoMigrate(db *gorm.DB) error {
 	// Adicione seus modelos aqui para auto-migração
-	// Exemplo: return db.AutoMigrate(&models.User{}, &models.Product{})
-	return nil
+	return db.AutoMigrate(&models.User{})
 }
 
 // Close fecha a conexão com o banco de dados
