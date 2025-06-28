@@ -1,6 +1,6 @@
 # Golang Server
 
-[![Go Version](https://img.shields.io/badge/Go-1.21+-blue.svg)](https://golang.org/)
+[![Go Version](https://img.shields.io/badge/Go-1.24.4-blue.svg)](https://golang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/yourusername/golang)](https://goreportcard.com/report/github.com/yourusername/golang)
 
@@ -9,17 +9,17 @@ Um servidor de aplicação em Go que segue as melhores práticas da comunidade, 
 ## 🚀 Características
 
 - **Arquitetura Limpa**: Separação clara de responsabilidades
-- **Framework Moderno**: Gin para HTTP routing
-- **ORM Robusto**: GORM para operações de banco de dados
+- **Framework Moderno**: Gin v1.10.1 para HTTP routing
+- **ORM Robusto**: GORM v1.30.0 para operações de banco de dados
 - **Logging Estruturado**: Logrus para logs em JSON
-- **Testes Automatizados**: Cobertura completa com Testify
+- **Testes Automatizados**: Cobertura completa com Testify v1.10.0
 - **Containerização**: Docker multi-stage para produção
 - **CI/CD**: GitHub Actions para automação
 - **Documentação**: API docs e guias de desenvolvimento
 
 ## 📋 Pré-requisitos
 
-- Go 1.21 ou superior
+- Go 1.24.4 ou superior
 - PostgreSQL 15 ou superior
 - Docker e Docker Compose (opcional)
 
@@ -61,6 +61,19 @@ make run
 - [Guia de Desenvolvimento](docs/README.md)
 - [Documentação da API](docs/API.md)
 - [Estrutura do Projeto](docs/README.md#estrutura-do-projeto)
+- [Changelog](CHANGELOG.md)
+
+## 🔄 Atualizações Recentes
+
+### Versão 1.24.4 (Dezembro 2024)
+- ✅ **Go 1.24.4** - Versão mais recente do Go
+- ✅ **Gin v1.10.1** - Framework web atualizado
+- ✅ **GORM v1.30.0** - ORM com melhorias de performance
+- ✅ **Testify v1.10.0** - Framework de testes atualizado
+- ✅ **Todas as dependências** atualizadas para as versões mais recentes
+- ✅ **Testes automatizados** funcionando perfeitamente
+
+Veja o [CHANGELOG.md](CHANGELOG.md) para detalhes completos das mudanças.
 
 ## 🏗️ Estrutura do Projeto
 

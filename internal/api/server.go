@@ -121,3 +121,8 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	}
 	return nil
 }
+
+// GetRouter retorna o router do servidor (usado para testes)
+func (s *Server) GetRouter() *gin.Engine {
+	return s.router
+}

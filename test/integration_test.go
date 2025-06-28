@@ -12,6 +12,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
 )
 
 // TestServer representa um servidor de teste
@@ -62,7 +63,7 @@ func NewTestServer(t *testing.T) *TestServer {
 // TestHealthCheck testa o endpoint de health check
 func TestHealthCheck(t *testing.T) {
 	ts := NewTestServer(t)
-	defer ts.DB.Close()
+	defer database.Close(ts.DB)
 
 	// Criar requisição
 	req, err := http.NewRequest("GET", "/health", nil)
@@ -72,7 +73,7 @@ func TestHealthCheck(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Executar requisição
-	ts.Server.router.ServeHTTP(w, req)
+	ts.Server.GetRouter().ServeHTTP(w, req)
 
 	// Verificar resposta
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -82,7 +83,7 @@ func TestHealthCheck(t *testing.T) {
 // TestHelloEndpoint testa o endpoint hello
 func TestHelloEndpoint(t *testing.T) {
 	ts := NewTestServer(t)
-	defer ts.DB.Close()
+	defer database.Close(ts.DB)
 
 	// Criar requisição
 	req, err := http.NewRequest("GET", "/api/v1/hello", nil)
@@ -92,7 +93,7 @@ func TestHelloEndpoint(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Executar requisição
-	ts.Server.router.ServeHTTP(w, req)
+	ts.Server.GetRouter().ServeHTTP(w, req)
 
 	// Verificar resposta
 	assert.Equal(t, http.StatusOK, w.Code)

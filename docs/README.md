@@ -6,12 +6,12 @@ Este é um servidor de aplicação em Go que segue as melhores práticas da comu
 
 ## Tecnologias Utilizadas
 
-- **Go 1.21** - Linguagem principal
-- **Gin** - Framework web
-- **GORM** - ORM para banco de dados
+- **Go 1.24.4** - Linguagem principal
+- **Gin v1.10.1** - Framework web
+- **GORM v1.30.0** - ORM para banco de dados
 - **PostgreSQL** - Banco de dados principal
 - **Logrus** - Sistema de logging
-- **Testify** - Framework de testes
+- **Testify v1.10.0** - Framework de testes
 - **Docker** - Containerização
 
 ## Estrutura do Projeto
@@ -39,7 +39,7 @@ golang/
 
 ## Pré-requisitos
 
-- Go 1.21 ou superior
+- Go 1.24.4 ou superior
 - PostgreSQL 15 ou superior
 - Docker e Docker Compose (opcional)
 

@@ -4,6 +4,17 @@
 
 Esta é a documentação da API REST do servidor Go. A API segue os padrões RESTful e retorna respostas em formato JSON.
 
+## Atualizações Recentes
+
+### Versão 1.24.4 (Dezembro 2024)
+- ✅ Atualizado para Go 1.24.4
+- ✅ Gin atualizado para v1.10.1
+- ✅ GORM atualizado para v1.30.0
+- ✅ Testify atualizado para v1.10.0
+- ✅ Todas as dependências atualizadas para as versões mais recentes
+- ✅ Testes automatizados funcionando corretamente
+- ✅ Melhorias na estrutura de testes de integração
+
 ## Base URL
 
 ```
