@@ -13,12 +13,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// mockDB é um mock do banco de dados para testes
-type mockDB struct{}
-
-func (m *mockDB) AutoMigrate(dst ...interface{}) error { return nil }
-func (m *mockDB) Close() error                         { return nil }
-
 // TestNewServer testa a criação de um novo servidor
 func TestNewServer(t *testing.T) {
 	cfg := &config.Config{
@@ -67,7 +61,7 @@ func TestHealthCheck(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Executar requisição
-	server.router.ServeHTTP(w, req)
+	server.GetRouter().ServeHTTP(w, req)
 
 	// Verificar resposta
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -98,7 +92,7 @@ func TestHelloHandler(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	// Executar requisição
-	server.router.ServeHTTP(w, req)
+	server.GetRouter().ServeHTTP(w, req)
 
 	// Verificar resposta
 	assert.Equal(t, http.StatusOK, w.Code)

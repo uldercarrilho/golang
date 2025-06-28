@@ -40,7 +40,10 @@ type LogConfig struct {
 // Load carrega as configurações do ambiente
 func Load() (*Config, error) {
 	// Carregar variáveis de ambiente do arquivo .env se existir
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		// Ignorar erro se o arquivo .env não existir
+		// godotenv.Load() retorna erro apenas se o arquivo não existir
+	}
 
 	return &Config{
 		Server: ServerConfig{
