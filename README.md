@@ -120,7 +120,33 @@ make docker-run
 docker-compose up -d
 ```
 
-## 📊 Monitoramento
+## 🚀 CI/CD
+
+Este projeto utiliza GitHub Actions para automação de CI/CD. O pipeline inclui:
+
+- ✅ **Testes Automatizados** - Executa todos os testes em cada push
+- ✅ **Linting** - Verifica qualidade do código
+- ✅ **Build** - Compila a aplicação
+- ✅ **Docker** - Constrói e publica imagem no Docker Hub
+
+### Configuração do Docker Hub
+
+Para que o pipeline funcione corretamente, configure os secrets no GitHub:
+
+1. Vá para **Settings** > **Secrets and variables** > **Actions**
+2. Adicione os secrets:
+   - `DOCKER_USERNAME` - Seu usuário do Docker Hub
+   - `DOCKER_PASSWORD` - Sua senha ou token de acesso
+
+> 📖 Veja o [Guia de Deploy](docs/DEPLOYMENT.md) para instruções detalhadas.
+
+### Status do Pipeline
+
+O pipeline é executado automaticamente em:
+- Push para `main` e `develop`
+- Pull requests para `main`
+
+## �� Monitoramento
 
 ### Health Check
 
