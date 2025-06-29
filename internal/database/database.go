@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// Connect estabelece conexão com o banco de dados
+// Connect estabelece conexão com o banco de dados.
 func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=UTC",
 		cfg.Host, cfg.User, cfg.Password, cfg.DBName, cfg.Port, cfg.SSLMode)
@@ -31,13 +31,13 @@ func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 	return db, nil
 }
 
-// autoMigrate executa as migrações automáticas dos modelos
+// autoMigrate executa as migrações automáticas dos modelos.
 func autoMigrate(db *gorm.DB) error {
 	// Adicione seus modelos aqui para auto-migração
 	return db.AutoMigrate(&models.User{})
 }
 
-// Close fecha a conexão com o banco de dados
+// Close fecha a conexão com o banco de dados.
 func Close(db *gorm.DB) error {
 	if db == nil {
 		return nil

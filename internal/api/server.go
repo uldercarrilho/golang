@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Server representa o servidor HTTP
+// Server representa o servidor HTTP.
 type Server struct {
 	config *config.Config
 	db     *gorm.DB
@@ -22,7 +22,7 @@ type Server struct {
 	server *http.Server
 }
 
-// NewServer cria uma nova instância do servidor
+// NewServer cria uma nova instância do servidor.
 func NewServer(cfg *config.Config, db *gorm.DB, logger *middleware.Logger) *Server {
 	// Configurar modo do Gin
 	if cfg.Log.Level == "debug" {
@@ -51,30 +51,25 @@ func NewServer(cfg *config.Config, db *gorm.DB, logger *middleware.Logger) *Serv
 	return server
 }
 
-// setupRoutes configura as rotas da aplicação
+// setupRoutes configura as rotas da aplicação.
 func (s *Server) setupRoutes() {
 	// Health check
 	s.router.GET("/health", s.healthCheck)
 
 	// API v1
 	v1 := s.router.Group("/api/v1")
-	{
-		// Exemplo de rota
-		v1.GET("/hello", s.helloHandler)
-
-		// Adicione mais rotas aqui
-		// users := v1.Group("/users")
-		// {
-		//     users.GET("/", s.getUsers)
-		//     users.POST("/", s.createUser)
-		//     users.GET("/:id", s.getUser)
-		//     users.PUT("/:id", s.updateUser)
-		//     users.DELETE("/:id", s.deleteUser)
-		// }
-	}
+	// Exemplo de rota
+	v1.GET("/hello", s.helloHandler)
+	// Adicione mais rotas aqui
+	// users := v1.Group("/users")
+	// users.GET("/", s.getUsers)
+	// users.POST("/", s.createUser)
+	// users.GET("/:id", s.getUser)
+	// users.PUT("/:id", s.updateUser)
+	// users.DELETE("/:id", s.deleteUser)
 }
 
-// healthCheck retorna o status de saúde da aplicação
+// healthCheck retorna o status de saúde da aplicação.
 func (s *Server) healthCheck(c *gin.Context) {
 	status := gin.H{
 		"status":    "ok",
@@ -92,7 +87,7 @@ func (s *Server) healthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, status)
 }
 
-// helloHandler exemplo de handler
+// helloHandler exemplo de handler.
 func (s *Server) helloHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Hello, World!",
@@ -100,7 +95,7 @@ func (s *Server) helloHandler(c *gin.Context) {
 	})
 }
 
-// Start inicia o servidor HTTP
+// Start inicia o servidor HTTP.
 func (s *Server) Start(addr string) error {
 	s.server = &http.Server{
 		Addr:         addr,
@@ -114,7 +109,7 @@ func (s *Server) Start(addr string) error {
 	return s.server.ListenAndServe()
 }
 
-// Shutdown desliga o servidor graciosamente
+// Shutdown desliga o servidor graciosamente.
 func (s *Server) Shutdown(ctx context.Context) error {
 	if s.server != nil {
 		return s.server.Shutdown(ctx)
@@ -122,7 +117,7 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return nil
 }
 
-// GetRouter retorna o router do servidor (usado para testes)
+// GetRouter retorna o router do servidor (usado para testes).
 func (s *Server) GetRouter() *gin.Engine {
 	return s.router
 }

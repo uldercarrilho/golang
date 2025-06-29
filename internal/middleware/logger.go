@@ -6,12 +6,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Logger é um wrapper para o logrus
+// Logger é um wrapper para o logrus.
 type Logger struct {
 	*logrus.Logger
 }
 
-// NewLogger cria uma nova instância do logger
+// NewLogger cria uma nova instância do logger.
 func NewLogger() *Logger {
 	log := logrus.New()
 
@@ -41,17 +41,17 @@ func NewLogger() *Logger {
 	return &Logger{log}
 }
 
-// WithField adiciona um campo ao logger
+// WithField adiciona um campo ao logger.
 func (l *Logger) WithField(key string, value interface{}) *logrus.Entry {
 	return l.Logger.WithField(key, value)
 }
 
-// WithFields adiciona múltiplos campos ao logger
+// WithFields adiciona múltiplos campos ao logger.
 func (l *Logger) WithFields(fields logrus.Fields) *logrus.Entry {
 	return l.Logger.WithFields(fields)
 }
 
-// Writer retorna o writer do logger para uso com gin.RecoveryWithWriter
+// Writer retorna o writer do logger para uso com gin.RecoveryWithWriter.
 func (l *Logger) Writer() *logrus.Logger {
 	return l.Logger
 }

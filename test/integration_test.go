@@ -1,6 +1,7 @@
 package test
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -66,7 +67,7 @@ func TestHealthCheck(t *testing.T) {
 	defer database.Close(ts.DB)
 
 	// Criar requisição
-	req, err := http.NewRequest("GET", "/health", nil)
+	req, err := http.NewRequestWithContext(context.Background(), "GET", "/health", http.NoBody)
 	require.NoError(t, err)
 
 	// Criar response recorder
@@ -86,7 +87,7 @@ func TestHelloEndpoint(t *testing.T) {
 	defer database.Close(ts.DB)
 
 	// Criar requisição
-	req, err := http.NewRequest("GET", "/api/v1/hello", nil)
+	req, err := http.NewRequestWithContext(context.Background(), "GET", "/api/v1/hello", http.NoBody)
 	require.NoError(t, err)
 
 	// Criar response recorder

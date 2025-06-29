@@ -20,7 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	defer database.Close(db)
 
 	// Executar migrações
 	log.Println("Running database migrations...")
@@ -33,6 +32,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to run migrations: %v", err)
 	}
+
+	defer func() {
+		if err := database.Close(db); err != nil {
+			log.Printf("Failed to close database: %v", err)
+		}
+	}()
 
 	log.Println("Database migrations completed successfully!")
 }

@@ -5,21 +5,21 @@ import (
 	"strings"
 )
 
-// Validator contém funções de validação comuns
+// Validator contém funções de validação comuns.
 type Validator struct{}
 
-// NewValidator cria uma nova instância do validator
+// NewValidator cria uma nova instância do validator.
 func NewValidator() *Validator {
 	return &Validator{}
 }
 
-// IsValidEmail valida se um email é válido
+// IsValidEmail valida se um email é válido.
 func (v *Validator) IsValidEmail(email string) bool {
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	return emailRegex.MatchString(email)
 }
 
-// IsValidPassword valida se uma senha é válida
+// IsValidPassword valida se uma senha é válida.
 func (v *Validator) IsValidPassword(password string) bool {
 	// Mínimo 8 caracteres, pelo menos uma letra maiúscula, uma minúscula e um número
 	if len(password) < 8 {
@@ -33,13 +33,13 @@ func (v *Validator) IsValidPassword(password string) bool {
 	return hasUpper && hasLower && hasNumber
 }
 
-// IsValidUUID valida se uma string é um UUID válido
+// IsValidUUID valida se uma string é um UUID válido.
 func (v *Validator) IsValidUUID(uuid string) bool {
 	uuidRegex := regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 	return uuidRegex.MatchString(strings.ToLower(uuid))
 }
 
-// IsValidPhone valida se um telefone é válido (formato brasileiro)
+// IsValidPhone valida se um telefone é válido (formato brasileiro).
 func (v *Validator) IsValidPhone(phone string) bool {
 	// Remove caracteres não numéricos
 	phone = regexp.MustCompile(`[^0-9]`).ReplaceAllString(phone, "")
@@ -48,7 +48,7 @@ func (v *Validator) IsValidPhone(phone string) bool {
 	return len(phone) >= 10 && len(phone) <= 11
 }
 
-// IsValidCPF valida se um CPF é válido
+// IsValidCPF valida se um CPF é válido.
 func (v *Validator) IsValidCPF(cpf string) bool {
 	// Remove caracteres não numéricos
 	cpf = regexp.MustCompile(`[^0-9]`).ReplaceAllString(cpf, "")
@@ -70,7 +70,7 @@ func (v *Validator) IsValidCPF(cpf string) bool {
 	return v.validateCPFDigits(cpf)
 }
 
-// validateCPFDigits valida os dígitos verificadores do CPF
+// validateCPFDigits valida os dígitos verificadores do CPF.
 func (v *Validator) validateCPFDigits(cpf string) bool {
 	// Primeiro dígito verificador
 	sum := 0

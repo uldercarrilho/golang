@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// CORSMiddleware configura CORS
+// CORSMiddleware configura CORS.
 func CORSMiddleware() gin.HandlerFunc {
 	return gin.HandlerFunc(func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
@@ -24,7 +24,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	})
 }
 
-// LoggingMiddleware registra informações sobre as requisições
+// LoggingMiddleware registra informações sobre as requisições.
 func LoggingMiddleware(logger *Logger) gin.HandlerFunc {
 	return gin.HandlerFunc(func(c *gin.Context) {
 		start := time.Now()
@@ -34,7 +34,7 @@ func LoggingMiddleware(logger *Logger) gin.HandlerFunc {
 		// Processar requisição
 		c.Next()
 
-		// Calcular duração
+		// Cálculo da duração
 		latency := time.Since(start)
 
 		// Logar informações da requisição
@@ -50,7 +50,7 @@ func LoggingMiddleware(logger *Logger) gin.HandlerFunc {
 	})
 }
 
-// RecoveryMiddleware recupera de pânicos
+// RecoveryMiddleware recupera de pânicos.
 func RecoveryMiddleware(logger *Logger) gin.HandlerFunc {
 	return gin.RecoveryWithWriter(logger.Out)
 }

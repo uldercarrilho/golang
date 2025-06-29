@@ -23,15 +23,15 @@ linters:
     - noctx
     - nolintlint
     - rowserrcheck
-    - structcheck
     - stylecheck
     - typecheck
     - unconvert
     - unparam
-    - varcheck
     - whitespace
 
 linters-settings:
+  misspell:
+    locale: pt_BR
   gocyclo:
     min-complexity: 15
   goconst:

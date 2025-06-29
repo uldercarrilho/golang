@@ -7,14 +7,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Config representa as configurações da aplicação
+// Config representa as configurações da aplicação.
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
 	Log      LogConfig
 }
 
-// ServerConfig configurações do servidor
+// ServerConfig configurações do servidor.
 type ServerConfig struct {
 	Port         string
 	ReadTimeout  int
@@ -22,7 +22,7 @@ type ServerConfig struct {
 	IdleTimeout  int
 }
 
-// DatabaseConfig configurações do banco de dados
+// DatabaseConfig configurações do banco de dados.
 type DatabaseConfig struct {
 	Host     string
 	Port     string
@@ -32,12 +32,12 @@ type DatabaseConfig struct {
 	SSLMode  string
 }
 
-// LogConfig configurações de log
+// LogConfig configurações de log.
 type LogConfig struct {
 	Level string
 }
 
-// Load carrega as configurações do ambiente
+// Load carrega as configurações do ambiente.
 func Load() (*Config, error) {
 	// Carregar variáveis de ambiente do arquivo .env se existir
 	_ = godotenv.Load()
@@ -63,7 +63,7 @@ func Load() (*Config, error) {
 	}, nil
 }
 
-// getEnv obtém uma variável de ambiente ou retorna um valor padrão
+// getEnv obtém uma variável de ambiente ou retorna um valor padrão.
 func getEnv(key, defaultValue string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
@@ -71,7 +71,7 @@ func getEnv(key, defaultValue string) string {
 	return defaultValue
 }
 
-// getEnvAsInt obtém uma variável de ambiente como inteiro ou retorna um valor padrão
+// getEnvAsInt obtém uma variável de ambiente como inteiro ou retorna um valor padrão.
 func getEnvAsInt(key string, defaultValue int) int {
 	if value := os.Getenv(key); value != "" {
 		if intValue, err := strconv.Atoi(value); err == nil {
