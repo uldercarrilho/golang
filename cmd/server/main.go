@@ -36,6 +36,7 @@ func main() {
 	}
 
 	logger.Infof("Starting server on port %s", port)
+
 	if err := server.Start(":" + port); err != nil {
 		logger.Fatalf("Failed to start server: %v", err)
 	}

@@ -30,6 +30,7 @@ func TestNewServer(t *testing.T) {
 	}
 
 	logger := middleware.NewLogger()
+
 	var db *gorm.DB // Mock do banco
 
 	server := NewServer(cfg, db, logger)
@@ -50,6 +51,7 @@ func TestHealthCheck(t *testing.T) {
 	}
 
 	logger := middleware.NewLogger()
+
 	var db *gorm.DB // Mock do banco
 
 	server := NewServer(cfg, db, logger)
@@ -81,6 +83,7 @@ func TestHelloHandler(t *testing.T) {
 	}
 
 	logger := middleware.NewLogger()
+
 	var db *gorm.DB // Mock do banco
 
 	server := NewServer(cfg, db, logger)

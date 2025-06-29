@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -67,7 +68,7 @@ func (s *Server) setupRoutes() {
 	// users.GET("/:id", s.getUser)
 	// users.PUT("/:id", s.updateUser)
 	// users.DELETE("/:id", s.deleteUser)
-}
+} //nolint:wsl
 
 // healthCheck retorna o status de saúde da aplicação.
 func (s *Server) healthCheck(c *gin.Context) {
@@ -106,14 +107,22 @@ func (s *Server) Start(addr string) error {
 	}
 
 	s.logger.Infof("Server starting on %s", addr)
-	return s.server.ListenAndServe()
+
+	if err := s.server.ListenAndServe(); err != nil {
+		return fmt.Errorf("failed to start server: %w", err) //nolint:wrapcheck
+	}
+
+	return nil
 }
 
 // Shutdown desliga o servidor graciosamente.
 func (s *Server) Shutdown(ctx context.Context) error {
 	if s.server != nil {
-		return s.server.Shutdown(ctx)
+		if err := s.server.Shutdown(ctx); err != nil {
+			return fmt.Errorf("failed to shutdown server: %w", err) //nolint:wrapcheck
+		}
 	}
+
 	return nil
 }
 

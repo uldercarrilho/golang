@@ -27,6 +27,7 @@ func (User) TableName() string {
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
+
 	return nil
 }
 

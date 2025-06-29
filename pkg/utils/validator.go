@@ -77,8 +77,10 @@ func (v *Validator) validateCPFDigits(cpf string) bool {
 	for i := 0; i < 9; i++ {
 		sum += int(cpf[i]-'0') * (10 - i)
 	}
+
 	remainder := sum % 11
 	digit1 := 0
+
 	if remainder >= 2 {
 		digit1 = 11 - remainder
 	}
@@ -88,8 +90,10 @@ func (v *Validator) validateCPFDigits(cpf string) bool {
 	for i := 0; i < 10; i++ {
 		sum += int(cpf[i]-'0') * (11 - i)
 	}
+
 	remainder = sum % 11
 	digit2 := 0
+
 	if remainder >= 2 {
 		digit2 = 11 - remainder
 	}

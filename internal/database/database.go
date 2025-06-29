@@ -20,12 +20,12 @@ func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to database: %w", err)
+		return nil, fmt.Errorf("failed to connect to database: %w", err) //nolint:wrapcheck
 	}
 
 	// Auto-migrate models
 	if err := autoMigrate(db); err != nil {
-		return nil, fmt.Errorf("failed to auto-migrate: %w", err)
+		return nil, fmt.Errorf("failed to auto-migrate: %w", err) //nolint:wrapcheck
 	}
 
 	return db, nil
@@ -34,7 +34,11 @@ func Connect(cfg config.DatabaseConfig) (*gorm.DB, error) {
 // autoMigrate executa as migrações automáticas dos modelos.
 func autoMigrate(db *gorm.DB) error {
 	// Adicione seus modelos aqui para auto-migração
-	return db.AutoMigrate(&models.User{})
+	if err := db.AutoMigrate(&models.User{}); err != nil {
+		return fmt.Errorf("failed to auto-migrate user model: %w", err) //nolint:wrapcheck
+	}
+
+	return nil
 }
 
 // Close fecha a conexão com o banco de dados.
@@ -42,9 +46,15 @@ func Close(db *gorm.DB) error {
 	if db == nil {
 		return nil
 	}
+
 	sqlDB, err := db.DB()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get underlying sql.DB: %w", err) //nolint:wrapcheck
 	}
-	return sqlDB.Close()
+
+	if err := sqlDB.Close(); err != nil {
+		return fmt.Errorf("failed to close database connection: %w", err) //nolint:wrapcheck
+	}
+
+	return nil
 }

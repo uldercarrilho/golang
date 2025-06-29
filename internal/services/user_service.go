@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 
 	"golang/internal/models"
 
@@ -23,7 +24,7 @@ func (s *UserService) CreateUser(user *models.User) error {
 	// Verificar se o email já existe
 	var existingUser models.User
 	if err := s.db.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
-		return errors.New("email already exists")
+		return fmt.Errorf("email already exists: %w", errors.New("email already exists")) //nolint:wrapcheck
 	}
 
 	// TODO: Hash da senha antes de salvar
@@ -38,6 +39,7 @@ func (s *UserService) GetUserByID(id uint) (*models.User, error) {
 	if err := s.db.First(&user, id).Error; err != nil {
 		return nil, err
 	}
+
 	return &user, nil
 }
 
@@ -47,6 +49,7 @@ func (s *UserService) GetUserByEmail(email string) (*models.User, error) {
 	if err := s.db.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
 	}
+
 	return &user, nil
 }
 
@@ -63,6 +66,7 @@ func (s *UserService) DeleteUser(id uint) error {
 // ListUsers lista todos os usuários com paginação.
 func (s *UserService) ListUsers(offset, limit int) ([]models.User, int64, error) {
 	var users []models.User
+
 	var total int64
 
 	// Contar total de registros

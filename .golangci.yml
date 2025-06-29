@@ -28,6 +28,22 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - prealloc
+    - makezero
+    - nilerr
+    - paralleltest
+    - dupl
+    - funlen
+    - gocognit
+    - mnd
+    - lll
+    - maintidx
+    - nestif
+    - testpackage
+    - wsl
+    - godox
+    - errorlint
+    - wrapcheck
 
 linters-settings:
   misspell:
@@ -52,6 +68,41 @@ linters-settings:
       - whyNoLint
       - wrapperFunc
       - regexpSimplify
+  funlen:
+    lines: 100
+    statements: 50
+  gocognit:
+    min-complexity: 15
+  mnd:
+    checks: argument,case,condition,operation,return,assign
+    ignored-numbers: 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,24,25,30,31,32,50,60,64,65,70,75,80,90,100,120,128,200,255,256,300,400,500,512,600,700,800,900,1000,1024,2000,2048,3000,4000,4096,5000,6000,7000,8000,9000,10000,16384,32768,65536,1048576
+  lll:
+    line-length: 120
+  maintidx:
+    under: 20
+  nestif:
+    min-complexity: 4
+  dupl:
+    threshold: 100
+  prealloc:
+    simple: true
+    range-loops: true
+    for-loops: false
+  makezero:
+    check: slice
+  paralleltest:
+    ignore-missing: false
+  errorlint:
+    errorf: true
+    asserts: true
+    comparison: true
+  wrapcheck:
+    ignoreSigs:
+      - .*\.Errorf
+      - .*\.Wrap
+      - .*\.Wrapf
+      - errors\.(Join|Unwrap|Is|As)
+      - fmt\.Errorf
 
 issues:
   exclude-rules:
@@ -60,9 +111,25 @@ issues:
         - gocyclo
         - goconst
         - godot
+        - funlen
+        - gocognit
+        - nestif
+        - paralleltest
+        - testpackage
     - path: pkg/utils/
       linters:
         - gosec
         - gocritic
+        - mnd
+    - path: cmd/
+      linters:
+        - funlen
+        - gocognit
+    - linters:
+        - dupl
+      text: "duplicate of"
+    - linters:
+        - godox
+      text: "TODO:"
   max-issues-per-linter: 0
   max-same-issues: 0 
