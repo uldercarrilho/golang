@@ -1,0 +1,56 @@
+{
+  "general": {
+    "style": "Siga o padrão oficial de formatação do Go (gofmt). Use golangci-lint com presets como gofmt, goimports, gocritic, errcheck, govet e staticcheck para garantir a qualidade do código.",
+    "naming": "Use PascalCase para tipos e funções exportadas, camelCase para variáveis internas. Prefixe interfaces com o comportamento, como `UserRepository`. Evite abreviações obscuras. Mantenha consistência entre camadas.",
+    "error_handling": "Sempre retorne erros contextuais utilizando `fmt.Errorf(\"contexto: %w\", err)`. Use `errors.Is` e `errors.As` para tratamento de erro. Nunca ignore erros retornados. Evite pânico (`panic`) exceto em inicializações incondicionalmente fatais.",
+    "comment_style": "Use comentários em estilo GoDoc para funções e tipos exportados. Documente contratos e comportamentos esperados de serviços e interfaces. Comentários internos devem explicar a intenção do código, não o óbvio.",
+    "testing": "Use `testify/suite` para testes organizados, `mockery` para mocks de interfaces. Testes devem cobrir casos de sucesso, erro e limites. Use `require` para assertivas críticas e `assert` para opcionais.",
+    "performance": "Evite alocações desnecessárias, prefira slices com capacidade pré-definida quando possível. Avalie uso de `sync.Pool` para reutilização de objetos. Use benchmark tests (`go test -bench`) para pontos críticos.",
+    "security": "Sanitize entradas de usuários, valide todos os dados com `validator.v10`. Evite vazamento de informações em logs e mensagens de erro. Use contextos com timeout (`context.WithTimeout`) para chamadas externas. Proteja variáveis sensíveis e tokens com `os.Getenv` ou Viper.",
+    "structure": "Siga a arquitetura limpa. Separação clara por camadas: `cmd` (entrada), `internal/handlers` (entrega), `internal/services` (casos de uso), `internal/repositories` (acesso a dados), `pkg` (utilitários reutilizáveis), `configs` (configuração), `tests` (testes externos). Nunca importe do `internal` fora do projeto.",
+    "concurrency": "Use `context.Context` para controle de concorrência e cancelamento. Use `sync.WaitGroup`, `sync.Mutex`, `channels` e `errgroup.Group` para orquestração. Evite race conditions — use `go test -race` regularmente.",
+    "logging": "Use `zerolog` (ou `logrus`) com estrutura JSON. Inclua IDs de requisição (traceID) no contexto. Evite logar dados sensíveis. Use níveis apropriados: `Info` para operações normais, `Warn` para situações inesperadas, `Error` para falhas."
+  },
+  "folderRules": {
+    "cmd/": {
+      "description": "Contém o ponto de entrada principal da aplicação.",
+      "rules": "Inicialize configurações, dependências, e camadas da arquitetura. Mantenha a função `main()` simples. Registre inicializações falhas com logs estruturados e termine com `os.Exit(1)` se necessário."
+    },
+    "internal/config/": {
+      "description": "Gerenciamento de configurações e variáveis de ambiente.",
+      "rules": "Use `Viper` para carregar `.env`, arquivos YAML, e variáveis de ambiente. Defina structs fortemente tipadas para configurações. Valide configurações críticas na inicialização."
+    },
+    "internal/handlers/": {
+      "description": "Controladores de entrada (HTTP, gRPC).",
+      "rules": "Exponha apenas lógica de transporte. Extraia dados do request, valide com `validator.v10`, injete contexto. Nunca implemente lógica de negócio aqui. Retorne erros em formato padronizado (DTO de erro)."
+    },
+    "internal/services/": {
+      "description": "Contém regras de negócio e casos de uso.",
+      "rules": "Implemente casos de uso com interfaces que abstraem repositórios. Siga princípios SOLID. Valide invariantes aqui também. Sem dependências de pacotes externos de entrega ou infraestrutura."
+    },
+    "internal/repositories/": {
+      "description": "Implementação do acesso a dados, como banco de dados e APIs externas.",
+      "rules": "Implemente interfaces definidas nos serviços. Use `sqlx`, `gorm`, `pgx`, etc. Evite leaks de detalhes da infra para o domínio. Trate erros de forma contextual e encapsule erros baixos nível."
+    },
+    "pkg/middleware/": {
+      "description": "Middlewares reutilizáveis para HTTP ou gRPC.",
+      "rules": "Use para autenticação, logging, recovery, CORS, etc. Sempre receba e propague `context.Context`. Registre traceID, tempo de resposta e status. Trate panics e retorne 500."
+    },
+    "pkg/utils/": {
+      "description": "Funções utilitárias genéricas, sem dependências circulares.",
+      "rules": "Utilitários devem ser puros e testáveis. Ex: geração de UUID, hash, parsing de tempo, etc. Evite criar 'God packages'."
+    },
+    "*_test.go": {
+      "description": "Arquivos de teste automatizados.",
+      "rules": "Use `testify` (`assert`, `require`, `suite`). Nomeie arquivos com sufixo `_test.go`. Use mocks com `mockery` ou `testdouble`. Testes devem ser determinísticos. Separe testes de unidade, integração e e2e."
+    },
+    "api/openapi/": {
+      "description": "Especificação OpenAPI/Swagger.",
+      "rules": "Mantenha arquivos YAML atualizados. Gere código client/server com ferramentas como `oapi-codegen` ou `swagger-codegen`. Valide compatibilidade entre contrato e implementação."
+    },
+    "docs/": {
+      "description": "Documentação técnica e de arquitetura.",
+      "rules": "Inclua diagramas de arquitetura, fluxo de dados, contratos de APIs. Use Markdown. Mantenha versionamento compatível com releases."
+    }
+  }
+}

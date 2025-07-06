@@ -1,0 +1,447 @@
+{
+  "general": {
+    "style": {
+      "description": "Padrões de estilo e formatação seguindo as convenções oficiais do Go",
+      "rules": [
+        "Seguir estritamente o `gofmt` e `goimports` para formatação automática",
+        "Usar `golangci-lint` com configuração rigorosa (já configurado no projeto)",
+        "Máximo de 120 caracteres por linha (configurado no .golangci.yml)",
+        "Usar tabs para indentação (padrão Go)",
+        "Funções devem ter no máximo 100 linhas (configurado no linter)",
+        "Complexidade ciclomática máxima de 15 (configurado no linter)",
+        "Organizar imports: stdlib, third-party, local packages",
+        "Evitar imports não utilizados (linter já configurado)",
+        "Usar `//nolint:rule` apenas quando absolutamente necessário com justificativa"
+      ],
+      "justification": "O projeto já possui configuração rigorosa do golangci-lint com 40+ linters habilitados. Os limites de 120 caracteres e 100 linhas por função são balanceados entre legibilidade e praticidade. A complexidade ciclomática de 15 é um padrão da indústria que previne código difícil de manter."
+    },
+    "naming": {
+      "description": "Convenções de nomenclatura seguindo padrões Go e Clean Architecture",
+      "rules": [
+        "Pacotes: nomes curtos, concisos, sem underscores ou camelCase (ex: 'handlers', 'services')",
+        "Variáveis: camelCase para locais, PascalCase para exported",
+        "Funções: PascalCase para exported, camelCase para não exported",
+        "Structs: PascalCase sempre, nomes descritivos e específicos",
+        "Interfaces: PascalCase, sufixo 'er' quando apropriado (ex: UserRepository, UserService)",
+        "Métodos: PascalCase para exported, camelCase para não exported",
+        "Acrônimos: manter em maiúsculas (ex: ID, URL, HTTP, API)",
+        "Evitar nomes muito curtos (exceto para variáveis de loop)",
+        "Usar nomes descritivos que expliquem a intenção, não apenas o tipo"
+      ],
+      "justification": "As convenções Go são bem estabelecidas e facilitam a leitura do código. O sufixo 'er' para interfaces é uma convenção Go que torna claro que é uma interface. Evitamos prefixos como 'I' (ex: IUser) que são mais comuns em outras linguagens."
+    },
+    "error_handling": {
+      "description": "Tratamento robusto de erros seguindo padrões Go modernos",
+      "rules": [
+        "Sempre verificar e tratar erros retornados por funções",
+        "Usar `fmt.Errorf` com `%w` para wrapping de erros (Go 1.13+)",
+        "Criar tipos de erro customizados para condições específicas: `type ValidationError struct{...}`",
+        "Usar `errors.Is()` e `errors.As()` para verificação de erros",
+        "Evitar `panic()` em código de produção, usar logging estruturado",
+        "Retornar erros específicos e descritivos com contexto",
+        "Usar `defer` para cleanup de recursos",
+        "Implementar graceful shutdown para operações longas",
+        "Logar erros com contexto suficiente para debugging",
+        "Usar `context.Context` para cancelamento e timeouts"
+      ],
+      "justification": "O wrapping de erros com `%w` preserva a cadeia de erros original, essencial para debugging. Erros customizados permitem tratamento específico em diferentes camadas. O contexto é fundamental para operações assíncronas e cancelamento."
+    },
+    "comment_style": {
+      "description": "Padrões de documentação e comentários seguindo GoDoc",
+      "rules": [
+        "Todo exported function, type, variable deve ter comentário godoc",
+        "Comentários devem começar com o nome do item documentado",
+        "Usar frases completas, terminando com ponto",
+        "Comentários devem explicar o 'porquê', não o 'o quê'",
+        "Para funções complexas, incluir exemplos de uso",
+        "Usar `// TODO:`, `// FIXME:`, `// NOTE:` para comentários de desenvolvimento",
+        "Documentar parâmetros e retornos em funções complexas",
+        "Incluir exemplos de uso em `_test.go` files",
+        "Comentários de linha única para lógica complexa",
+        "Evitar comentários óbvios que apenas repetem o código"
+      ],
+      "justification": "GoDoc gera documentação automática a partir dos comentários, tornando-os essenciais para APIs públicas. Comentários que explicam o 'porquê' são mais valiosos que os que explicam o 'o quê', pois o código já é autoexplicativo."
+    },
+    "testing": {
+      "description": "Padrões de testes automatizados com alta cobertura e qualidade",
+      "rules": [
+        "Usar `testify` para assertions e mocking (já incluído no go.mod)",
+        "Cobertura mínima de 80% para código de produção",
+        "Testes unitários para todas as funções exported",
+        "Testes de integração para operações de banco e API",
+        "Usar `table-driven tests` para múltiplos cenários",
+        "Nomes de testes descritivos: `TestFunctionName_Scenario_ExpectedResult`",
+        "Usar `t.Parallel()` para testes independentes",
+        "Mockar dependências externas (HTTP, banco, etc.)",
+        "Testar casos de erro e edge cases",
+        "Usar `httptest` para testes de handlers HTTP",
+        "Implementar `TestMain` para setup/teardown global",
+        "Usar `gomock` ou `testify/mock` para mocking complexo"
+      ],
+      "justification": "O testify é a biblioteca padrão para testes em Go, oferecendo assertions poderosas e mocking. Table-driven tests são uma convenção Go que permite testar múltiplos cenários de forma concisa. A cobertura de 80% é um bom equilíbrio entre qualidade e praticidade."
+    },
+    "performance": {
+      "description": "Otimizações de performance e eficiência",
+      "rules": [
+        "Usar `sync.Pool` para objetos frequentemente alocados",
+        "Implementar connection pooling para banco de dados (GORM já faz isso)",
+        "Usar `context.WithTimeout` para operações com deadline",
+        "Implementar rate limiting para APIs públicas",
+        "Usar `bufio` para I/O eficiente",
+        "Evitar alocações desnecessárias em hot paths",
+        "Usar `strings.Builder` para concatenação de strings",
+        "Implementar caching com `sync.Map` ou Redis",
+        "Usar `goroutines` com `sync.WaitGroup` para operações paralelas",
+        "Monitorar memory usage e implementar garbage collection tuning",
+        "Usar `pprof` para profiling de performance"
+      ],
+      "justification": "O GORM já implementa connection pooling automaticamente. sync.Pool é essencial para reduzir pressão no GC em aplicações de alta performance. Context com timeout previne goroutine leaks."
+    },
+    "security": {
+      "description": "Práticas de segurança para aplicações backend",
+      "rules": [
+        "Nunca logar senhas, tokens ou dados sensíveis",
+        "Usar `bcrypt` ou `argon2` para hash de senhas",
+        "Implementar rate limiting para prevenir brute force",
+        "Validar e sanitizar todas as entradas de usuário com `go-playground/validator/v10`",
+        "Usar HTTPS em produção com certificados válidos",
+        "Implementar CORS adequadamente",
+        "Usar JWT com expiração e refresh tokens",
+        "Usar prepared statements para prevenir SQL injection (GORM faz isso)",
+        "Implementar audit logging para operações sensíveis",
+        "Usar variáveis de ambiente para configurações sensíveis",
+        "Implementar proper session management",
+        "Executar `govulncheck` regularmente para vulnerabilidades"
+      ],
+      "justification": "O validator/v10 já está incluído no projeto. GORM automaticamente usa prepared statements. Rate limiting é essencial para APIs públicas. Audit logging é crucial para compliance e debugging."
+    },
+    "structure": {
+      "description": "Organização e estrutura do projeto seguindo Clean Architecture",
+      "rules": [
+        "Seguir Clean Architecture com separação clara de responsabilidades",
+        "Usar `cmd/` para entry points da aplicação",
+        "Usar `internal/` para código específico da aplicação",
+        "Usar `pkg/` para código reutilizável",
+        "Organizar por domínio: `internal/handlers/`, `internal/services/`, `internal/repositories/`",
+        "Usar `internal/config/` para configurações da aplicação",
+        "Implementar dependency injection para testabilidade",
+        "Usar interfaces para desacoplamento entre camadas",
+        "Manter `go.mod` e `go.sum` atualizados",
+        "Usar `Makefile` para automação de tarefas comuns"
+      ],
+      "justification": "Clean Architecture garante que as dependências apontem para dentro, facilitando testes e manutenção. A estrutura atual do projeto já segue esse padrão. Interfaces permitem mocking e testabilidade."
+    },
+    "concurrency": {
+      "description": "Padrões de concorrência e paralelismo seguros",
+      "rules": [
+        "Usar `goroutines` para operações I/O bound",
+        "Usar `channels` para comunicação entre goroutines",
+        "Implementar proper error handling em goroutines",
+        "Usar `sync.WaitGroup` para sincronização",
+        "Usar `context.Context` para cancelamento",
+        "Implementar worker pools para processamento paralelo",
+        "Usar `sync.Mutex` ou `sync.RWMutex` para acesso concorrente a dados",
+        "Evitar goroutine leaks com proper cleanup",
+        "Usar `select` para multiplexing de channels",
+        "Implementar circuit breakers para operações externas",
+        "Sempre executar testes com `-race` flag"
+      ],
+      "justification": "O princípio 'Don't communicate by sharing memory; share memory by communicating' é fundamental em Go. Context é essencial para cancelamento e timeouts. Race detection é crucial para detectar bugs de concorrência."
+    },
+    "logging": {
+      "description": "Logging estruturado e observabilidade",
+      "rules": [
+        "Usar `logrus` para logging estruturado (já incluído no projeto)",
+        "Implementar diferentes níveis de log: DEBUG, INFO, WARN, ERROR",
+        "Incluir correlation IDs para tracing de requests",
+        "Logar métricas de performance (latency, throughput)",
+        "Usar structured logging com fields ao invés de string concatenation",
+        "Implementar log rotation para arquivos grandes",
+        "Configurar diferentes outputs (stdout, file, syslog)",
+        "Incluir context information em logs de erro",
+        "Usar sampling para logs de alta frequência",
+        "Implementar health checks com logging"
+      ],
+      "justification": "Logrus já está configurado no projeto e oferece logging estruturado em JSON. Correlation IDs são essenciais para tracing em sistemas distribuídos. Structured logging facilita análise e alerting."
+    }
+  },
+  "folderRules": {
+    "cmd/": {
+      "description": "Entry points da aplicação - deve ser mínimo e focado na inicialização",
+      "rules": [
+        "Cada subdiretório representa um executável diferente",
+        "Arquivo `main.go` deve ser simples e focado apenas na inicialização",
+        "Usar `flag` ou `cobra` para parsing de argumentos de linha de comando",
+        "Implementar graceful shutdown com signal handling",
+        "Configurar logging no início da aplicação",
+        "Usar `context.Background()` como root context",
+        "Implementar proper error handling para falhas de inicialização",
+        "Usar `os.Exit(1)` apenas em casos de erro fatal",
+        "Documentar flags e configurações disponíveis"
+      ],
+      "justification": "O main.go atual já segue esse padrão, sendo simples e focado na inicialização. Graceful shutdown é essencial para operações em produção. Signal handling permite parada limpa da aplicação."
+    },
+    "internal/config/": {
+      "description": "Configurações da aplicação com validação e tipagem forte",
+      "rules": [
+        "Usar structs para representar configurações",
+        "Implementar validação de configurações obrigatórias",
+        "Usar `godotenv` para carregar variáveis de ambiente (já incluído)",
+        "Implementar fallbacks para valores padrão",
+        "Usar tipos apropriados (string, int, bool) para configurações",
+        "Implementar configurações por ambiente (dev, staging, prod)",
+        "Usar tags de struct para validação quando apropriado",
+        "Implementar configurações sensíveis via secrets management",
+        "Documentar todas as variáveis de ambiente disponíveis",
+        "Usar `viper` para configurações complexas se necessário"
+      ],
+      "justification": "Godotenv já está incluído no projeto. Structs tipadas previnem erros de runtime. Validação na inicialização falha rápido se configurações estiverem incorretas."
+    },
+    "internal/api/": {
+      "description": "HTTP handlers e controllers - camada de apresentação",
+      "rules": [
+        "Usar `gin.Context` para manipulação de requests/responses (já configurado)",
+        "Implementar proper HTTP status codes",
+        "Validar input usando structs com tags de validação",
+        "Usar binding para parsing de JSON, form data, etc.",
+        "Implementar proper error responses com mensagens descritivas",
+        "Usar middleware para cross-cutting concerns",
+        "Implementar paginação para listagens",
+        "Usar proper HTTP headers (Content-Type, Cache-Control, etc.)",
+        "Implementar rate limiting por endpoint",
+        "Usar context para timeouts e cancelamento",
+        "Implementar proper logging de requests/responses"
+      ],
+      "justification": "Gin já está configurado no projeto e oferece excelente performance. Validação com tags é mais eficiente que validação manual. Middleware permite reutilização de lógica cross-cutting."
+    },
+    "internal/services/": {
+      "description": "Lógica de negócio e serviços - camada de domínio",
+      "rules": [
+        "Implementar interfaces para testabilidade",
+        "Usar dependency injection via construtor",
+        "Implementar proper error handling e custom error types",
+        "Usar transactions para operações de banco complexas",
+        "Implementar caching para operações custosas",
+        "Usar context para cancelamento e timeouts",
+        "Implementar retry logic para operações externas",
+        "Usar proper logging para debugging e monitoring",
+        "Implementar validation de regras de negócio",
+        "Usar events/notifications para comunicação entre serviços"
+      ],
+      "justification": "Interfaces permitem mocking em testes. Dependency injection facilita testabilidade e desacoplamento. Transactions garantem consistência de dados."
+    },
+    "internal/database/": {
+      "description": "Acesso a dados e persistência - camada de infraestrutura",
+      "rules": [
+        "Usar GORM para ORM com PostgreSQL (já configurado)",
+        "Implementar interfaces para abstração do banco",
+        "Usar migrations para schema changes",
+        "Implementar proper connection pooling (GORM já faz isso)",
+        "Usar transactions para operações atômicas",
+        "Implementar soft deletes quando apropriado",
+        "Usar indexes para queries de performance",
+        "Implementar proper error handling para database errors",
+        "Usar prepared statements para prevenir SQL injection (GORM faz isso)",
+        "Implementar proper logging de queries em desenvolvimento"
+      ],
+      "justification": "GORM já está configurado e oferece ORM robusto com PostgreSQL. Connection pooling é automático. Migrations garantem versionamento do schema."
+    },
+    "internal/middleware/": {
+      "description": "HTTP middleware e interceptors",
+      "rules": [
+        "Implementar middleware como funções que retornam `gin.HandlerFunc`",
+        "Usar proper error handling e logging",
+        "Implementar CORS adequadamente",
+        "Usar authentication/authorization middleware",
+        "Implementar rate limiting middleware",
+        "Usar logging middleware para observabilidade",
+        "Implementar recovery middleware para panic handling",
+        "Usar compression middleware para performance",
+        "Implementar proper context propagation",
+        "Usar middleware chaining de forma eficiente"
+      ],
+      "justification": "Middleware permite reutilização de lógica cross-cutting. Recovery middleware previne crashes da aplicação. Logging middleware é essencial para observabilidade."
+    },
+    "internal/models/": {
+      "description": "Modelos de dados e entidades de domínio",
+      "rules": [
+        "Definir structs que representam entidades de negócio",
+        "Usar tags GORM para mapeamento de banco",
+        "Usar tags de validação para validação de dados",
+        "Implementar métodos de negócio nas entidades quando apropriado",
+        "Usar composição para reutilização de campos comuns",
+        "Implementar proper serialização/deserialização",
+        "Usar tipos customizados para domínios específicos",
+        "Documentar campos complexos ou não óbvios",
+        "Implementar métodos de conversão entre DTOs e entidades",
+        "Usar proper naming para campos de banco"
+      ],
+      "justification": "Modelos bem definidos são a base da aplicação. Tags GORM facilitam o mapeamento objeto-relacional. Validação no modelo garante consistência de dados."
+    },
+    "pkg/utils/": {
+      "description": "Utilitários e helpers reutilizáveis",
+      "rules": [
+        "Implementar funções puras quando possível",
+        "Usar proper error handling",
+        "Implementar validation functions",
+        "Usar crypto functions para operações seguras",
+        "Implementar date/time utilities",
+        "Usar string manipulation functions",
+        "Implementar file I/O utilities",
+        "Usar proper logging para debugging",
+        "Implementar retry logic utilities",
+        "Usar proper testing para todas as funções"
+      ],
+      "justification": "Funções puras são mais testáveis e previsíveis. Utilitários genéricos podem ser reutilizados em diferentes partes da aplicação. Testing é essencial para utilitários."
+    },
+    "*_test.go": {
+      "description": "Arquivos de teste automatizados",
+      "rules": [
+        "Usar `testify` para assertions e mocking (já incluído)",
+        "Implementar table-driven tests para múltiplos cenários",
+        "Usar `httptest` para testes de HTTP handlers",
+        "Implementar proper test setup e teardown",
+        "Usar `gomock` ou `testify/mock` para mocking",
+        "Implementar integration tests para operações de banco",
+        "Usar `t.Parallel()` para testes independentes",
+        "Implementar proper error testing",
+        "Usar `benchmark` tests para performance critical code",
+        "Implementar proper test coverage reporting"
+      ],
+      "justification": "Testify já está configurado no projeto. Table-driven tests são uma convenção Go poderosa. Testes paralelos melhoram performance da suite de testes."
+    },
+    "docs/": {
+      "description": "Documentação do projeto",
+      "rules": [
+        "Manter README.md atualizado com instruções de setup",
+        "Documentar arquitetura e decisões de design",
+        "Incluir diagramas de arquitetura quando apropriado",
+        "Documentar deployment procedures",
+        "Incluir troubleshooting guides",
+        "Documentar API endpoints",
+        "Manter changelog atualizado",
+        "Incluir contribution guidelines",
+        "Documentar environment variables",
+        "Incluir performance benchmarks quando relevante"
+      ],
+      "justification": "Documentação é essencial para onboarding de novos desenvolvedores e manutenção. Diagramas facilitam entendimento da arquitetura. Changelog é crucial para releases."
+    },
+    "scripts/": {
+      "description": "Scripts de automação e utilitários",
+      "rules": [
+        "Usar Go para scripts complexos quando possível",
+        "Implementar proper error handling em scripts",
+        "Usar flags para configuração de scripts",
+        "Implementar logging em scripts",
+        "Usar proper exit codes",
+        "Documentar propósito e uso de cada script",
+        "Implementar dry-run mode quando apropriado",
+        "Usar proper argument parsing",
+        "Implementar validation de pré-requisitos",
+        "Usar proper file handling"
+      ],
+      "justification": "Scripts em Go são mais portáveis e podem reutilizar código da aplicação. Proper error handling e exit codes são essenciais para automação."
+    },
+    "test/": {
+      "description": "Testes de integração e end-to-end",
+      "rules": [
+        "Separar testes de integração dos testes unitários",
+        "Usar tags de build para controlar execução",
+        "Implementar proper test database setup",
+        "Usar containers para testes de integração",
+        "Implementar proper cleanup após testes",
+        "Usar fixtures para dados de teste",
+        "Implementar proper timeout handling",
+        "Usar proper logging em testes de integração",
+        "Implementar health checks antes dos testes",
+        "Usar proper error reporting"
+      ],
+      "justification": "Testes de integração são essenciais para validar comportamento end-to-end. Containers garantem ambiente consistente. Proper cleanup previne interferência entre testes."
+    }
+  },
+  "tooling": {
+    "golangci-lint": {
+      "description": "Configuração já existente com 40+ linters",
+      "rules": [
+        "Manter configuração atual do .golangci.yml",
+        "Executar antes de cada commit",
+        "Configurar CI/CD para executar linter",
+        "Revisar e atualizar linters periodicamente",
+        "Usar configurações específicas por diretório quando necessário"
+      ]
+    },
+    "make": {
+      "description": "Automação de tarefas comuns",
+      "rules": [
+        "Usar Makefile para tarefas de desenvolvimento",
+        "Implementar targets para build, test, lint, clean",
+        "Usar make.bat para compatibilidade Windows",
+        "Documentar todos os targets disponíveis",
+        "Implementar targets para deployment"
+      ]
+    },
+    "docker": {
+      "description": "Containerização e deployment",
+      "rules": [
+        "Manter Dockerfile otimizado para produção",
+        "Usar multi-stage builds para reduzir tamanho",
+        "Implementar proper health checks",
+        "Usar docker-compose para desenvolvimento",
+        "Configurar proper logging em containers"
+      ]
+    }
+  },
+  "alternatives": {
+    "logging": {
+      "current": "logrus",
+      "alternatives": [
+        {
+          "name": "zerolog",
+          "pros": "Performance superior, menos alocações, JSON nativo",
+          "cons": "API menos intuitiva, menos features que logrus",
+          "recommendation": "Considerar migração se performance for crítica"
+        },
+        {
+          "name": "zap",
+          "pros": "Excelente performance, API flexível",
+          "cons": "API mais complexa, curva de aprendizado",
+          "recommendation": "Boa alternativa se precisar de mais controle"
+        }
+      ]
+    },
+    "orm": {
+      "current": "GORM",
+      "alternatives": [
+        {
+          "name": "sqlx",
+          "pros": "Mais controle sobre SQL, melhor performance",
+          "cons": "Menos features automáticas, mais código boilerplate",
+          "recommendation": "Considerar se precisar de controle total sobre queries"
+        },
+        {
+          "name": "ent",
+          "pros": "Code generation, type safety, GraphQL support",
+          "cons": "Curva de aprendizado, menos maduro que GORM",
+          "recommendation": "Boa opção para projetos novos com GraphQL"
+        }
+      ]
+    },
+    "web_framework": {
+      "current": "Gin",
+      "alternatives": [
+        {
+          "name": "Echo",
+          "pros": "Performance similar, API mais limpa",
+          "cons": "Menos middleware disponível",
+          "recommendation": "Boa alternativa se preferir API mais simples"
+        },
+        {
+          "name": "Chi",
+          "pros": "Mais flexível, compatível com net/http",
+          "cons": "Menos features built-in",
+          "recommendation": "Boa opção se precisar de mais controle"
+        }
+      ]
+    }
+  }
+} 

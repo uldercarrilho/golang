@@ -1,0 +1,104 @@
+{
+  "general": {
+    "style": "Use gofmt e goimports para formatação automática. Prefira código explícito a inteligente. Mantenha funções curtas e diretas, idealmente com no máximo 40 linhas.",
+    "naming": "Use PascalCase para structs e interfaces exportadas, camelCase para variáveis internas. Prefixos como 'Get', 'Set' e 'Handle' devem ser usados com moderação. Nomeie pacotes com substantivos curtos no singular (ex: 'handler', 'service').",
+    "error_handling": "Nunca ignore erros. Use 'errors.Wrap' (com pkg/errors) ou '%w' com fmt.Errorf para manter o contexto. Crie erros semânticos reutilizáveis em pacotes como 'pkg/errors'.",
+    "comment_style": "Documente todas as funções exportadas com comentários iniciando pelo nome da função. Use GoDoc. Explicações sobre regras de negócio devem ser comentadas acima dos blocos relevantes.",
+    "testing": "Use 'testify/suite' e 'mockery' para mocks. Siga a estrutura Arrange-Act-Assert. Escreva testes unitários para services e repositories, testes de integração para handlers.",
+    "performance": "Evite alocações desnecessárias. Prefira slices com capacidade definida. Use goroutines com canal quando adequado. Prefira buffer em IO intensivo. Use benchmarks (go test -bench).",
+    "security": "Evite interpolação direta em queries. Sanitize todas as entradas. Use 'net/http' ou 'gorilla/mux' com middlewares para CORS, headers de segurança e autenticação. Proteja secrets em .env ou Vault.",
+    "structure": "Siga a Clean Architecture: dependências apontam para dentro. Não use importações cruzadas entre handlers, services e repositories. Coloque interfaces no domínio ou no layer que as consome.",
+    "concurrency": "Sempre use context.Context para cancelamento e deadlines. Proteja recursos compartilhados com mutexes ou canais. Evite goroutines órfãs. Use errgroup em pipelines concorrentes.",
+    "logging": "Use zerolog como logger principal. Sempre logue erros com contexto. Use logger por request (com context). Nunca logue dados sensíveis (ex: senha, token)."
+  },
+  "folderRules": {
+    "cmd/": {
+      "description": "Contém a definição do ponto de entrada da aplicação. Deve ser mínimo, delegando lógica para o internal.",
+      "rules": [
+        "Evite lógica de negócio aqui; apenas inicialização e injeção de dependências.",
+        "Use Viper ou godotenv para carregar configurações.",
+        "Inicie o logger e handlers aqui.",
+        "Se houver CLI, use Cobra."
+      ]
+    },
+    "internal/config/": {
+      "description": "Gerencia o carregamento e validação de configurações.",
+      "rules": [
+        "Use Viper para carregar configurações de arquivos, variáveis de ambiente e flags.",
+        "Valide configurações com validator.v10.",
+        "Separe configurações por domínio (ex: DBConfig, ServerConfig).",
+        "Documente chaves esperadas no README ou docs."
+      ]
+    },
+    "internal/handlers/": {
+      "description": "Define os manipuladores HTTP (controllers).",
+      "rules": [
+        "Handlers não devem conter lógica de negócio direta.",
+        "Use context para passar dados e cancelar execuções.",
+        "Valide entradas com validator.v10.",
+        "Use middlewares para autenticação e logging.",
+        "Padronize respostas HTTP (ex: código, mensagem, data)."
+      ]
+    },
+    "internal/services/": {
+      "description": "Contém regras de negócio e orquestração entre camadas.",
+      "rules": [
+        "Serviços devem conter interfaces para facilitar mocks em testes.",
+        "Aplique princípios SOLID, principalmente SRP e DIP.",
+        "Evite acoplamento direto com bibliotecas externas (ex: DB driver)."
+      ]
+    },
+    "internal/repositories/": {
+      "description": "Responsáveis por comunicação com banco de dados ou outros storages.",
+      "rules": [
+        "Interface no domínio, implementação aqui.",
+        "Use context para todas operações.",
+        "Evite SQL hardcoded — use sqlc ou squirrel para queries complexas.",
+        "Não retorne entidades de drivers diretamente; mapeie para structs do domínio."
+      ]
+    },
+    "pkg/middleware/": {
+      "description": "Middlewares reutilizáveis para HTTP (CORS, Auth, Logging).",
+      "rules": [
+        "Middlewares devem ser puros, receber e retornar http.Handler.",
+        "Evite lógica de negócio nos middlewares.",
+        "Use context para injeção de metadados (ex: userID, traceID)."
+      ]
+    },
+    "pkg/utils/": {
+      "description": "Funções utilitárias genéricas e independentes.",
+      "rules": [
+        "Evite dependências externas sempre que possível.",
+        "Documente claramente o propósito e limitações de cada função.",
+        "Nunca coloque lógica de domínio aqui."
+      ]
+    },
+    "*_test.go": {
+      "description": "Arquivos de teste. Devem cobrir todos os casos relevantes.",
+      "rules": [
+        "Use 'testify/assert' e 'require' para asserções.",
+        "Cobertura mínima de 80%.",
+        "Use mocks com mockery ou implementações fake.",
+        "Separe claramente testes unitários, integração e end-to-end."
+      ]
+    },
+    "api/openapi/": {
+      "description": "Especificação da API REST em OpenAPI (Swagger).",
+      "rules": [
+        "Use comentários no código com swaggo ou mantenha arquivos .yaml.",
+        "Garanta sincronização entre código e documentação.",
+        "Inclua exemplos de requisições e respostas.",
+        "Documente todos os endpoints expostos publicamente."
+      ]
+    },
+    "docs/": {
+      "description": "Documentação técnica do projeto.",
+      "rules": [
+        "Inclua diagramas de arquitetura e fluxos.",
+        "Descreva como executar localmente, executar testes e subir ambientes.",
+        "Atualize sempre que houver mudança significativa no código.",
+        "Mantenha um changelog ou release notes."
+      ]
+    }
+  }
+}

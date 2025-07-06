@@ -1,0 +1,161 @@
+{
+  "general": {
+    "style": [
+      "Siga estritamente o guia de estilo do Go (Effective Go).",
+      "Formate todo o código usando `gofmt` ou `goimports` antes de fazer o commit.",
+      "Utilize `golangci-lint` com uma configuração rigorosa (`.golangci.yml`) para garantir a qualidade e consistência do código.",
+      "Mantenha as linhas com um comprimento máximo de 120 caracteres para melhor legibilidade.",
+      "Funções devem ser curtas e ter uma única responsabilidade (Single Responsibility Principle). Evite funções com mais de 30-40 linhas de código."
+    ],
+    "naming": [
+      "Nomes de pacotes devem ser curtos, concisos e em `lowercase`. Ex: `handlers`, `services`.",
+      "Variáveis e funções exportadas devem começar com letra maiúscula (PascalCase). Variáveis e funções não exportadas devem começar com letra minúscula (camelCase).",
+      "Interfaces devem, por convenção, terminar com o sufixo `-er`. Ex: `Reader`, `StorageProvider`, `UserService`. Evite usar 'I' como prefixo (ex: `IUser`).",
+      "Acrônimos devem ser escritos em caixa alta. Ex: `ServeHTTP`, `userID`, `URL`, `APIKey`."
+    ],
+    "error_handling": [
+      "Sempre verifique o erro retornado por uma função. A expressão `if err != nil { return err }` é o padrão.",
+      "Não descarte erros usando o identificador em branco (`_`), a menos que seja explicitamente justificado e comentado.",
+      "Para adicionar contexto a um erro, use o verbo `%w` com `fmt.Errorf`. Ex: `return fmt.Errorf(\"falha ao buscar usuário %d: %w\", userID, err)`. Isso preserva a cadeia de erros.",
+      "Defina tipos de erro customizados ou erros sentinela para condições de erro específicas que precisam ser tratadas programaticamente pelo chamador.",
+      "Erros retornados de camadas internas (repositories, services) nunca devem expor detalhes de implementação (ex: erro de SQL) para a camada de handlers, a menos que sejam traduzidos para erros de domínio."
+    ],
+    "comment_style": [
+      "Escreva comentários `godoc` para todas as funções, tipos e constantes exportadas.",
+      "O comentário deve começar com o nome do elemento que está sendo documentado. Ex: `// UserService contém a lógica de negócio para usuários.`",
+      "Use `//` para comentários de linha e de bloco. Evite `/* ... */`.",
+      "Comente para explicar o *porquê* de uma implementação complexa ou não óbvia, não o *o quê*."
+    ],
+    "testing": [
+      "Use o pacote `testify` para asserções (`testify/assert` e `testify/require`). Use `require` para verificações que devem interromper o teste imediatamente em caso de falha (ex: verificação de erro).",
+      "Utilize `testify/mock` para criar mocks de dependências (interfaces), como repositórios e serviços externos.",
+      "Adote testes de tabela (table-driven tests) para cobrir múltiplos casos de entrada e saída de forma concisa.",
+      "Mantenha uma alta cobertura de testes, mas foque em testar o comportamento e a lógica de negócio, não apenas em atingir uma porcentagem.",
+      "Testes de integração devem ser separados dos testes de unidade, usando tags de build do Go (`//go:build integration`)."
+    ],
+    "performance": [
+      "Evite otimizações prematuras. Escreva código claro e correto primeiro, depois otimize gargalos identificados com profiling (`pprof`).",
+      "Seja consciente sobre alocações de memória em loops quentes (hot paths). Use `sync.Pool` para reutilizar objetos caros.",
+      "Para concatenação de strings ou bytes em laços, prefira `strings.Builder` ou `bytes.Buffer` em vez do operador `+` para evitar alocações excessivas.",
+      "Ao passar structs grandes para funções, considere usar ponteiros para evitar a cópia dos dados, mas esteja ciente das implicações de compartilhamento de estado."
+    ],
+    "security": [
+      "Valide *toda* entrada de dados do usuário ou de sistemas externos usando `go-playground/validator.v10` em DTOs (Data Transfer Objects).",
+      "Use sempre `prepared statements` para interações com o banco de dados para prevenir SQL Injection. Nunca use `fmt.Sprintf` para construir queries com input do usuário.",
+      "Não logue informações sensíveis (senhas, tokens, PII). Use a tag `mask` ou lógicas no logger para ofuscar esses dados.",
+      "Utilize as bibliotecas criptográficas padrão do Go (`crypto/...`) e nunca implemente sua própria criptografia.",
+      "Execute `govulncheck` regularmente para escanear o projeto em busca de vulnerabilidades conhecidas nas dependências."
+    ],
+    "structure": [
+      "Siga a Regra da Dependência da Clean Architecture: as dependências devem apontar sempre para dentro. `handlers` -> `services` -> `repositories`. O código em `internal` não pode importar `cmd`.",
+      "A injeção de dependência é obrigatória. As dependências (ex: `UserService` em `UserHandler`) devem ser passadas via construtor (ex: `NewUserHandler(userService *service.UserService)`).",
+      "As entidades de domínio (structs que representam os modelos de negócio) devem ser agnósticas a frameworks e bancos de dados. Elas residem no coração da aplicação.",
+      "Mantenha a `main.go` (em `cmd/`) enxuta. Sua única responsabilidade é a inicialização: carregar config, instanciar componentes (repos, services, handlers), injetar dependências e iniciar o servidor."
+    ],
+    "concurrency": [
+      "Utilize goroutines para operações de I/O e tarefas concorrentes, mas gerencie seu ciclo de vida.",
+      "Use `context.Context` em todas as funções que possam ser de longa duração, especialmente em handlers e services, para gerenciar cancelamentos, timeouts e deadlines.",
+      "Prefira canais (`channels`) para comunicação entre goroutines em vez de compartilhar memória. \"Do not communicate by sharing memory; instead, share memory by communicating.\"",
+      "Use `sync.WaitGroup` para esperar a finalização de um grupo de goroutines.",
+      "Sempre execute seus testes com o flag `-race` (`go test -race ./...`) para detectar condições de corrida."
+    ],
+    "logging": [
+      "Utilize um logger estruturado como `zerolog` (preferencial) ou `logrus`. Configure-o para output em JSON em ambientes de produção.",
+      "Nunca use `fmt.Println` ou `log.Println` no código da aplicação. Use o logger injetado.",
+      "Adicione contexto aos logs, como `request_id`, `user_id`, etc. Isso pode ser feito injetando um logger com contexto via `context.Context`.",
+      "Use os níveis de log apropriados: `Debug` para desenvolvimento, `Info` para eventos operacionais, `Warn` para condições anormais mas recuperáveis, `Error` para falhas que requerem atenção."
+    ]
+  },
+  "folderRules": [
+    {
+      "folder": "cmd/",
+      "rules": [
+        "Este diretório contém os pontos de entrada da aplicação (`main.go`).",
+        "A lógica aqui deve ser mínima: apenas inicialização e orquestração (wiring) dos componentes.",
+        "Responsabilidades: carregar configurações, instanciar repositórios, serviços e handlers, injetar dependências e iniciar o servidor HTTP ou workers.",
+        "NÃO deve conter nenhuma lógica de negócio."
+      ]
+    },
+    {
+      "folder": "internal/config/",
+      "rules": [
+        "Responsável por carregar e prover as configurações da aplicação.",
+        "Utilize a biblioteca `Viper` para ler de arquivos (`.env`, `config.yaml`) e variáveis de ambiente.",
+        "Defina uma `struct` Go que represente a configuração da aplicação.",
+        "Exponha uma função singleton, como `LoadConfig()`, que carrega a configuração e a retorna. A configuração deve ser carregada apenas uma vez na inicialização."
+      ]
+    },
+    {
+      "folder": "internal/handlers/",
+      "rules": [
+        "Esta é a camada de apresentação (API). Responsável por lidar com requisições HTTP.",
+        "Depende da camada de `services`. Nunca deve chamar a camada de `repositories` diretamente.",
+        "Responsabilidades: decodificar o corpo da requisição para um DTO, validar o DTO usando `go-playground/validator.v10`, chamar o método apropriado do serviço e serializar a resposta (ou erro) para JSON.",
+        "Não deve conter lógica de negócio. É um tradutor entre HTTP e as chamadas de serviço."
+      ]
+    },
+    {
+      "folder": "internal/services/",
+      "rules": [
+        "Esta é a camada de lógica de negócio (business logic).",
+        "Contém as regras de negócio centrais e orquestra o fluxo de dados.",
+        "Depende das interfaces da camada de `repositories`, não das implementações concretas.",
+        "Deve ser agnóstica a frameworks externos (ex: não deve ter código relacionado a `net/http` ou a um ORM específico).",
+        "Deve receber e retornar entidades de domínio ou DTOs primitivos."
+      ]
+    },
+    {
+      "folder": "internal/repositories/",
+      "rules": [
+        "Esta é a camada de acesso a dados (data access layer).",
+        "Define as interfaces para persistência de dados. Ex: `UserRepository interface`.",
+        "A implementação concreta (ex: `PostgresUserRepository struct`) implementa a interface e contém toda a lógica de banco de dados (SQL, chamadas a ORM, etc.).",
+        "Deve retornar entidades de domínio ou erros de domínio/repositório, nunca tipos específicos do driver do banco de dados.",
+        "A implementação pode estar em um sub-pacote, como `internal/repositories/postgres`."
+      ]
+    },
+    {
+      "folder": "pkg/middleware/",
+      "rules": [
+        "Contém middlewares HTTP reutilizáveis.",
+        "Exemplos: logging de requisições, autenticação/JWT, autorização, CORS, rate limiting, recuperação de panics.",
+        "Middlewares devem ser escritos como wrappers padrão `http.Handler` para máxima compatibilidade com bibliotecas como `chi`, `gorilla/mux` ou `net/http`."
+      ]
+    },
+    {
+      "folder": "pkg/utils/",
+      "rules": [
+        "Contém funções utilitárias verdadeiramente genéricas e que não se encaixam em nenhum outro lugar.",
+        "Cuidado para não tornar este pacote um 'balaio de gatos'. Se uma função é específica de um domínio, ela deve pertencer ao pacote daquele domínio.",
+        "Exemplos de utilitários válidos: funções de hash de senha, manipulação de strings genéricas, geradores de token.",
+        "Toda função aqui deve ser pura, bem documentada e ter 100% de cobertura de testes."
+      ]
+    },
+    {
+      "folder": "*_test.go",
+      "rules": [
+        "Sempre use `testify/assert` para asserções que não devem parar o teste e `testify/require` para asserções críticas.",
+        "Mock todas as dependências externas (banco de dados, APIs de terceiros) usando `testify/mock`. Os testes de unidade não devem fazer chamadas de rede ou I/O.",
+        "Nomeie as funções de teste seguindo o padrão `Test[NomeDaUnidadeDeTrabalho]_[Cenario]_[ResultadoEsperado]`. Ex: `TestCreateUser_InvalidEmail_ReturnsError`.",
+        "Utilize testes de tabela (table-driven tests) para testar múltiplas variações com código limpo."
+      ]
+    },
+    {
+      "folder": "api/openapi/",
+      "rules": [
+        "Este diretório armazena a especificação da API, como `openapi.yaml` ou `swagger.json`.",
+        "A especificação é a fonte da verdade para o contrato da API.",
+        "Use ferramentas como `oapi-codegen` ou `go-swagger` para gerar modelos de dados (structs), stubs de servidor e até clientes a partir deste arquivo.",
+        "Manter este arquivo atualizado é crucial."
+      ]
+    },
+    {
+      "folder": "docs/",
+      "rules": [
+        "Armazena a documentação de alto nível do projeto que não se encaixa no `godoc`.",
+        "Exemplos: diagramas de arquitetura (C4, etc.), registros de decisão de arquitetura (ADRs), guias de setup para novos desenvolvedores, Postmortems.",
+        "Use o formato Markdown (`.md`) para os arquivos de documentação."
+      ]
+    }
+  ]
+}

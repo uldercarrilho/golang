@@ -1,0 +1,310 @@
+{
+  "general": {
+    "style": {
+      "description": "Estilo de código Go seguindo padrões oficiais e boas práticas",
+      "rules": [
+        "Seguir sempre o `gofmt` e `golint` para formatação e estilo",
+        "Usar `golangci-lint` para análise estática de código",
+        "Máximo de 120 caracteres por linha",
+        "Usar tabs para indentação (não espaços)",
+        "Sempre incluir `package` statement no início do arquivo",
+        "Organizar imports: stdlib, third-party, local packages",
+        "Usar `goimports` para organizar imports automaticamente",
+        "Evitar imports não utilizados (usar `_` para imports necessários apenas para side effects)",
+        "Usar `//nolint:rule` apenas quando absolutamente necessário, com justificativa"
+      ]
+    },
+    "naming": {
+      "description": "Convenções de nomenclatura em Go",
+      "rules": [
+        "Pacotes: nomes curtos, concisos, sem underscores ou camelCase",
+        "Variáveis: camelCase para variáveis locais, PascalCase para exported",
+        "Constantes: PascalCase para exported, camelCase para não exported",
+        "Funções: PascalCase para exported, camelCase para não exported",
+        "Structs: PascalCase sempre, nomes descritivos",
+        "Interfaces: PascalCase, sufixo 'er' quando apropriado (ex: Reader, Writer)",
+        "Métodos: PascalCase para exported, camelCase para não exported",
+        "Acrônimos: manter em maiúsculas (ex: ID, URL, HTTP)",
+        "Evitar nomes muito curtos (exceto para variáveis de loop)",
+        "Usar nomes descritivos que expliquem a intenção"
+      ]
+    },
+    "error_handling": {
+      "description": "Tratamento robusto de erros seguindo padrões Go",
+      "rules": [
+        "Sempre verificar e tratar erros retornados por funções",
+        "Usar `fmt.Errorf` com `%w` para wrapping de erros (Go 1.13+)",
+        "Criar tipos de erro customizados quando necessário: `type ValidationError struct{...}`",
+        "Usar `errors.Is()` e `errors.As()` para verificação de erros",
+        "Evitar `panic()` em código de produção, usar logging estruturado",
+        "Retornar erros específicos e descritivos",
+        "Usar `defer` para cleanup de recursos",
+        "Implementar graceful shutdown para operações longas",
+        "Logar erros com contexto suficiente para debugging",
+        "Usar `context.Context` para cancelamento e timeouts"
+      ]
+    },
+    "comment_style": {
+      "description": "Padrões de documentação e comentários",
+      "rules": [
+        "Todo exported function, type, variable deve ter comentário godoc",
+        "Comentários devem começar com o nome do item documentado",
+        "Usar frases completas, terminando com ponto",
+        "Comentários devem explicar o 'porquê', não o 'o quê'",
+        "Para funções complexas, incluir exemplos de uso",
+        "Usar `// TODO:`, `// FIXME:`, `// NOTE:` para comentários de desenvolvimento",
+        "Documentar parâmetros e retornos em funções complexas",
+        "Incluir exemplos de uso em `_test.go` files",
+        "Comentários de linha única para lógica complexa",
+        "Evitar comentários óbvios que apenas repetem o código"
+      ]
+    },
+    "testing": {
+      "description": "Padrões de testes automatizados",
+      "rules": [
+        "Usar `testify` para assertions e mocking",
+        "Cobertura mínima de 80% para código de produção",
+        "Testes unitários para todas as funções exported",
+        "Testes de integração para operações de banco e API",
+        "Usar `table-driven tests` para múltiplos cenários",
+        "Nomes de testes descritivos: `TestFunctionName_Scenario_ExpectedResult`",
+        "Usar `t.Parallel()` para testes independentes",
+        "Mockar dependências externas (HTTP, banco, etc.)",
+        "Testar casos de erro e edge cases",
+        "Usar `httptest` para testes de handlers HTTP",
+        "Implementar `TestMain` para setup/teardown global",
+        "Usar `gomock` ou `testify/mock` para mocking complexo"
+      ]
+    },
+    "performance": {
+      "description": "Otimizações de performance e eficiência",
+      "rules": [
+        "Usar `sync.Pool` para objetos frequentemente alocados",
+        "Implementar connection pooling para banco de dados",
+        "Usar `context.WithTimeout` para operações com deadline",
+        "Implementar rate limiting para APIs públicas",
+        "Usar `bufio` para I/O eficiente",
+        "Evitar alocações desnecessárias em hot paths",
+        "Usar `strings.Builder` para concatenação de strings",
+        "Implementar caching com `sync.Map` ou Redis",
+        "Usar `goroutines` com `sync.WaitGroup` para operações paralelas",
+        "Monitorar memory usage e implementar garbage collection tuning",
+        "Usar `pprof` para profiling de performance"
+      ]
+    },
+    "security": {
+      "description": "Práticas de segurança para aplicações backend",
+      "rules": [
+        "Nunca logar senhas, tokens ou dados sensíveis",
+        "Usar `bcrypt` ou `argon2` para hash de senhas",
+        "Implementar rate limiting para prevenir brute force",
+        "Validar e sanitizar todas as entradas de usuário",
+        "Usar HTTPS em produção com certificados válidos",
+        "Implementar CORS adequadamente",
+        "Usar JWT com expiração e refresh tokens",
+        "Implementar input validation com `go-playground/validator`",
+        "Usar prepared statements para prevenir SQL injection",
+        "Implementar audit logging para operações sensíveis",
+        "Usar variáveis de ambiente para configurações sensíveis",
+        "Implementar proper session management"
+      ]
+    },
+    "structure": {
+      "description": "Organização e estrutura do projeto",
+      "rules": [
+        "Seguir Clean Architecture com separação clara de responsabilidades",
+        "Usar `cmd/` para entry points da aplicação",
+        "Usar `internal/` para código específico da aplicação",
+        "Usar `pkg/` para código reutilizável",
+        "Organizar por domínio: `internal/handlers/`, `internal/services/`, `internal/repositories/`",
+        "Usar `configs/` para configurações da aplicação",
+        "Implementar dependency injection para testabilidade",
+        "Usar interfaces para desacoplamento entre camadas",
+        "Manter `go.mod` e `go.sum` atualizados",
+        "Usar `Makefile` para automação de tarefas comuns"
+      ]
+    },
+    "concurrency": {
+      "description": "Padrões de concorrência e paralelismo",
+      "rules": [
+        "Usar `goroutines` para operações I/O bound",
+        "Usar `channels` para comunicação entre goroutines",
+        "Implementar proper error handling em goroutines",
+        "Usar `sync.WaitGroup` para sincronização",
+        "Usar `context.Context` para cancelamento",
+        "Implementar worker pools para processamento paralelo",
+        "Usar `sync.Mutex` ou `sync.RWMutex` para acesso concorrente a dados",
+        "Evitar goroutine leaks com proper cleanup",
+        "Usar `select` para multiplexing de channels",
+        "Implementar circuit breakers para operações externas"
+      ]
+    },
+    "logging": {
+      "description": "Logging estruturado e observabilidade",
+      "rules": [
+        "Usar `logrus` ou `zerolog` para logging estruturado",
+        "Implementar diferentes níveis de log: DEBUG, INFO, WARN, ERROR",
+        "Incluir correlation IDs para tracing de requests",
+        "Logar métricas de performance (latency, throughput)",
+        "Usar structured logging com fields ao invés de string concatenation",
+        "Implementar log rotation para arquivos grandes",
+        "Configurar diferentes outputs (stdout, file, syslog)",
+        "Incluir context information em logs de erro",
+        "Usar sampling para logs de alta frequência",
+        "Implementar health checks com logging"
+      ]
+    }
+  },
+  "folderRules": {
+    "cmd/": {
+      "description": "Entry points da aplicação",
+      "rules": [
+        "Cada subdiretório representa um executável diferente",
+        "Arquivo `main.go` deve ser simples e focado apenas na inicialização",
+        "Usar `flag` ou `cobra` para parsing de argumentos de linha de comando",
+        "Implementar graceful shutdown com signal handling",
+        "Configurar logging no início da aplicação",
+        "Usar `context.Background()` como root context",
+        "Implementar proper error handling para falhas de inicialização",
+        "Usar `os.Exit(1)` apenas em casos de erro fatal",
+        "Documentar flags e configurações disponíveis"
+      ]
+    },
+    "internal/config/": {
+      "description": "Configurações da aplicação",
+      "rules": [
+        "Usar structs para representar configurações",
+        "Implementar validação de configurações obrigatórias",
+        "Usar `godotenv` para carregar variáveis de ambiente",
+        "Implementar fallbacks para valores padrão",
+        "Usar tipos apropriados (string, int, bool) para configurações",
+        "Implementar configurações por ambiente (dev, staging, prod)",
+        "Usar tags de struct para validação quando apropriado",
+        "Implementar configurações sensíveis via secrets management",
+        "Documentar todas as variáveis de ambiente disponíveis",
+        "Usar `viper` para configurações complexas se necessário"
+      ]
+    },
+    "internal/handlers/": {
+      "description": "HTTP handlers e controllers",
+      "rules": [
+        "Usar `gin.Context` para manipulação de requests/responses",
+        "Implementar proper HTTP status codes",
+        "Validar input usando structs com tags de validação",
+        "Usar binding para parsing de JSON, form data, etc.",
+        "Implementar proper error responses com mensagens descritivas",
+        "Usar middleware para cross-cutting concerns",
+        "Implementar paginação para listagens",
+        "Usar proper HTTP headers (Content-Type, Cache-Control, etc.)",
+        "Implementar rate limiting por endpoint",
+        "Usar context para timeouts e cancelamento",
+        "Implementar proper logging de requests/responses"
+      ]
+    },
+    "internal/services/": {
+      "description": "Lógica de negócio e serviços",
+      "rules": [
+        "Implementar interfaces para testabilidade",
+        "Usar dependency injection via construtor",
+        "Implementar proper error handling e custom error types",
+        "Usar transactions para operações de banco complexas",
+        "Implementar caching para operações custosas",
+        "Usar context para cancelamento e timeouts",
+        "Implementar retry logic para operações externas",
+        "Usar proper logging para debugging e monitoring",
+        "Implementar validation de regras de negócio",
+        "Usar events/notifications para comunicação entre serviços"
+      ]
+    },
+    "internal/repositories/": {
+      "description": "Acesso a dados e persistência",
+      "rules": [
+        "Usar GORM para ORM com PostgreSQL",
+        "Implementar interfaces para abstração do banco",
+        "Usar migrations para schema changes",
+        "Implementar proper connection pooling",
+        "Usar transactions para operações atômicas",
+        "Implementar soft deletes quando apropriado",
+        "Usar indexes para queries de performance",
+        "Implementar proper error handling para database errors",
+        "Usar prepared statements para prevenir SQL injection",
+        "Implementar proper logging de queries em desenvolvimento"
+      ]
+    },
+    "pkg/middleware/": {
+      "description": "HTTP middleware e interceptors",
+      "rules": [
+        "Implementar middleware como funções que retornam `gin.HandlerFunc`",
+        "Usar proper error handling e logging",
+        "Implementar CORS adequadamente",
+        "Usar authentication/authorization middleware",
+        "Implementar rate limiting middleware",
+        "Usar logging middleware para observabilidade",
+        "Implementar recovery middleware para panic handling",
+        "Usar compression middleware para performance",
+        "Implementar proper context propagation",
+        "Usar middleware chaining de forma eficiente"
+      ]
+    },
+    "pkg/utils/": {
+      "description": "Utilitários e helpers reutilizáveis",
+      "rules": [
+        "Implementar funções puras quando possível",
+        "Usar proper error handling",
+        "Implementar validation functions",
+        "Usar crypto functions para operações seguras",
+        "Implementar date/time utilities",
+        "Usar string manipulation functions",
+        "Implementar file I/O utilities",
+        "Usar proper logging para debugging",
+        "Implementar retry logic utilities",
+        "Usar proper testing para todas as funções"
+      ]
+    },
+    "*_test.go": {
+      "description": "Arquivos de teste",
+      "rules": [
+        "Usar `testify` para assertions e mocking",
+        "Implementar table-driven tests para múltiplos cenários",
+        "Usar `httptest` para testes de HTTP handlers",
+        "Implementar proper test setup e teardown",
+        "Usar `gomock` ou `testify/mock` para mocking",
+        "Implementar integration tests para operações de banco",
+        "Usar `t.Parallel()` para testes independentes",
+        "Implementar proper error testing",
+        "Usar `benchmark` tests para performance critical code",
+        "Implementar proper test coverage reporting"
+      ]
+    },
+    "api/openapi/": {
+      "description": "Documentação da API",
+      "rules": [
+        "Usar OpenAPI 3.0 specification",
+        "Documentar todos os endpoints com exemplos",
+        "Incluir proper error responses",
+        "Usar proper HTTP status codes",
+        "Documentar authentication methods",
+        "Incluir request/response schemas",
+        "Usar proper content types",
+        "Implementar versioning da API",
+        "Documentar rate limiting policies",
+        "Incluir examples para todos os endpoints"
+      ]
+    },
+    "docs/": {
+      "description": "Documentação do projeto",
+      "rules": [
+        "Manter README.md atualizado com instruções de setup",
+        "Documentar arquitetura e decisões de design",
+        "Incluir diagramas de arquitetura quando apropriado",
+        "Documentar deployment procedures",
+        "Incluir troubleshooting guides",
+        "Documentar API endpoints",
+        "Manter changelog atualizado",
+        "Incluir contribution guidelines",
+        "Documentar environment variables",
+        "Incluir performance benchmarks quando relevante"
+      ]
+    }
+  }
+} 
